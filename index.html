@@ -1,1 +1,1108 @@
-..
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPD8 Group — We Build What's Next</title>
+<meta name="description" content="UPD8 Group builds AI-powered platforms that save time, save money, and keep people on track. Based in Sydney, Australia.">
+<meta property="og:title" content="UPD8 Group — We Build What's Next">
+<meta property="og:description" content="AI-powered platforms that save time, save money, and keep people on track.">
+<meta property="og:url" content="https://upd8.group">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060a;
+    --surface: #0e0e14;
+    --surface-2: #16161f;
+    --border: #1e1e2a;
+    --border-hover: #2a2a3a;
+    --text: #e8e8ed;
+    --text-dim: #8888a0;
+    --text-muted: #55556a;
+    --accent: #c8ff00;
+    --accent-dim: rgba(200, 255, 0, 0.08);
+    --accent-glow: rgba(200, 255, 0, 0.15);
+    --white: #ffffff;
+    --gradient-1: linear-gradient(135deg, #c8ff00 0%, #00ffc8 100%);
+    --gradient-2: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+    --gradient-3: linear-gradient(135deg, #6b9fff 0%, #c86bff 100%);
+    --gradient-4: linear-gradient(135deg, #ff6baa 0%, #ff6b6b 100%);
+    --gradient-5: linear-gradient(135deg, #00d4aa 0%, #00a8ff 100%);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ============ GRAIN OVERLAY ============ */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* ============ LAYOUT ============ */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 0;
+    background: rgba(6, 6, 10, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+
+  nav.scrolled {
+    border-bottom-color: var(--border);
+  }
+
+  nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--bg) !important;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+
+  .nav-mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 180px 0 120px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(107, 159, 255, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    animation: float 25s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(30px, -30px); }
+    66% { transform: translate(-20px, 20px); }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(200, 255, 0, 0.15);
+    border-radius: 100px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 32px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin-bottom: 28px;
+    animation: fadeInUp 0.6s ease 0.1s both;
+    max-width: 900px;
+  }
+
+  .hero h1 .accent { color: var(--accent); }
+
+  .hero h1 .outline {
+    -webkit-text-stroke: 2px var(--text-dim);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--text-dim);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.6s ease 0.3s both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--accent-glow);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--border-hover);
+    background: var(--surface);
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ STATS ============ */
+  .stats {
+    padding: 0 0 100px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .stat {
+    background: var(--surface);
+    padding: 36px 28px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+
+  .stat-value.accent { color: var(--accent); }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ============ PLATFORMS SECTION ============ */
+  .platforms {
+    padding: 100px 0;
+  }
+
+  .section-header {
+    margin-bottom: 64px;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    font-size: 17px;
+    color: var(--text-dim);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  /* Platform Cards */
+  .platform-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .platform-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .platform-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+  }
+
+  .card-content {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .card-number {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .card-tag {
+    padding: 4px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+  }
+
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: gap 0.2s;
+  }
+
+  .platform-card:hover .card-link { gap: 12px; }
+
+  .card-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    overflow: hidden;
+  }
+
+  .card-visual-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-icon {
+    font-size: 120px;
+    opacity: 0.15;
+    filter: blur(0.5px);
+    transition: transform 0.5s ease, opacity 0.3s;
+  }
+
+  .platform-card:hover .card-icon {
+    transform: scale(1.1) rotate(3deg);
+    opacity: 0.25;
+  }
+
+  /* Card gradient backgrounds */
+  .card-gradient-1 { background: linear-gradient(135deg, rgba(200,255,0,0.06) 0%, rgba(0,255,200,0.03) 100%); }
+  .card-gradient-2 { background: linear-gradient(135deg, rgba(107,159,255,0.06) 0%, rgba(200,107,255,0.03) 100%); }
+  .card-gradient-3 { background: linear-gradient(135deg, rgba(255,165,0,0.06) 0%, rgba(255,107,107,0.03) 100%); }
+  .card-gradient-4 { background: linear-gradient(135deg, rgba(255,107,170,0.06) 0%, rgba(255,107,107,0.03) 100%); }
+  .card-gradient-5 { background: linear-gradient(135deg, rgba(0,212,170,0.06) 0%, rgba(0,168,255,0.03) 100%); }
+
+  .link-1 { color: #c8ff00; }
+  .link-2 { color: #8cb4ff; }
+  .link-3 { color: #ffa040; }
+  .link-4 { color: #ff6b9d; }
+  .link-5 { color: #00d4aa; }
+
+  /* ============ MORE SECTION ============ */
+  .more-section {
+    padding: 80px 0 120px;
+  }
+
+  .more-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 48px;
+  }
+
+  .more-item {
+    background: var(--surface);
+    padding: 40px 32px;
+    transition: background 0.3s;
+  }
+
+  .more-item:hover { background: var(--surface-2); }
+
+  .more-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  .more-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .more-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ============ ABOUT ============ */
+  .about {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+
+  .about p {
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .about-values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .value-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    transition: border-color 0.3s;
+  }
+
+  .value-card:hover { border-color: var(--border-hover); }
+
+  .value-card h4 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .value-card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ============ CTA ============ */
+  .cta-section {
+    padding: 120px 0;
+  }
+
+  .cta-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 60% 40%, var(--accent-dim) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .cta-box h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .cta-box p {
+    font-size: 17px;
+    color: var(--text-dim);
+    max-width: 460px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  .cta-box .btn-primary { position: relative; }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 60px 0 40px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+
+  .footer-brand p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-top: 16px;
+    max-width: 300px;
+  }
+
+  .footer-col h4 {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col li { margin-bottom: 12px; }
+
+  .footer-col a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-copy {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .footer-location {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .platform-card {
+      grid-template-columns: 1fr;
+    }
+
+    .card-visual { min-height: 180px; }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .more-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .cta-box { padding: 48px 28px; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-mobile-toggle { display: block; }
+
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      gap: 16px;
+    }
+
+    .hero { padding: 140px 0 80px; }
+
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-secondary { justify-content: center; }
+
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+
+    .card-content { padding: 28px; }
+    .card-title { font-size: 22px; }
+
+    .footer-grid { grid-template-columns: 1fr; }
+
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  }
+
+  /* ============ SCROLL ANIMATIONS ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container">
+    <a href="#" class="logo">
+      <div class="logo-text">UPD<span>8</span></div>
+    </a>
+    <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="#platforms">Platforms</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="mailto:jay@upd8.group" class="nav-cta">Get in Touch</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">Sydney, Australia — Building what's next</div>
+    <h1>
+      We build tools<br>
+      that <span class="accent">save time</span>,<br>
+      save money<span class="outline">&</span><br>
+      keep you on track.
+    </h1>
+    <p class="hero-sub">
+      The UPD8 Group is an Australian technology company creating AI-powered platforms that solve real problems for real people.
+    </p>
+    <div class="hero-actions">
+      <a href="#platforms" class="btn-primary">Explore Our Platforms →</a>
+      <a href="mailto:jay@upd8.group" class="btn-secondary">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid reveal">
+      <div class="stat">
+        <div class="stat-value accent">5</div>
+        <div class="stat-label">Active Platforms</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">AI</div>
+        <div class="stat-label">Powered</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value accent">AU</div>
+        <div class="stat-label">Built &amp; Based</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">∞</div>
+        <div class="stat-label">Ideas in the Pipeline</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section class="platforms" id="platforms">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">// Our Platforms</div>
+      <h2 class="section-title">Five platforms.<br>One mission.</h2>
+      <p class="section-desc">Every tool we build starts with the same question: what's wasting people's time, and how do we fix it?</p>
+    </div>
+
+    <div class="platform-cards">
+
+      <!-- 1. LISTING LENS -->
+      <div class="platform-card reveal">
+        <div class="card-content">
+          <div class="card-number">01</div>
+          <h3 class="card-title">Listing Lens</h3>
+          <p class="card-desc">AI-powered marketplace analysis that helps Australians avoid buying lemons. Screenshot any vehicle listing from Facebook Marketplace or Carsales and get instant red flags, illegal mod detection, comparable pricing, and negotiation scripts.</p>
+          <div class="card-tags">
+            <span class="card-tag">AI Analysis</span>
+            <span class="card-tag">Vehicles</span>
+            <span class="card-tag">Australia</span>
+          </div>
+          <span class="card-link link-1">listinglens.app →</span>
+        </div>
+        <div class="card-visual card-gradient-1">
+          <div class="card-visual-inner">
+            <span class="card-icon">🔍</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. APSJOBS -->
+      <div class="platform-card reveal">
+        <div class="card-content">
+          <div class="card-number">02</div>
+          <h3 class="card-title">APSJobs.app</h3>
+          <p class="card-desc">Tinder-style job discovery for the Australian Public Service. Swipe through AI-distilled job cards, get salary and super intelligence, enterprise agreement comparisons, and AI-generated selection criteria — built for 170,000+ APS employees.</p>
+          <div class="card-tags">
+            <span class="card-tag">APS Jobs</span>
+            <span class="card-tag">AI Matching</span>
+            <span class="card-tag">Career Tools</span>
+          </div>
+          <span class="card-link link-2">apsjobs.app →</span>
+        </div>
+        <div class="card-visual card-gradient-2">
+          <div class="card-visual-inner">
+            <span class="card-icon">💼</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. NOT YET, DUDE! -->
+      <div class="platform-card reveal">
+        <div class="card-content">
+          <div class="card-number">03</div>
+          <h3 class="card-title">Not Yet, Dude!</h3>
+          <p class="card-desc">The ADHD-friendly idea parking lot. Park your brilliant ideas with a 90-day cooling off period. When the reminder hits, decide: build it, snooze it, or kill it. Free forever — because good ideas deserve a safe place to wait.</p>
+          <div class="card-tags">
+            <span class="card-tag">ADHD Friendly</span>
+            <span class="card-tag">Idea Management</span>
+            <span class="card-tag">Free</span>
+          </div>
+          <span class="card-link link-3">notyetdude.com →</span>
+        </div>
+        <div class="card-visual card-gradient-3">
+          <div class="card-visual-inner">
+            <span class="card-icon">💡</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. OH CRAP, I FORGOT! -->
+      <div class="platform-card reveal">
+        <div class="card-content">
+          <div class="card-number">04</div>
+          <h3 class="card-title">Oh Crap, I Forgot!</h3>
+          <p class="card-desc">Voice call reminders that cut through notification blindness. Add "!" to any Google Calendar event and get an actual phone call 24 hours before, plus an SMS backup 2 hours out. Because a ringtone beats a push notification every time.</p>
+          <div class="card-tags">
+            <span class="card-tag">Voice Calls</span>
+            <span class="card-tag">Google Calendar</span>
+            <span class="card-tag">SMS</span>
+          </div>
+          <span class="card-link link-4">ohcrapiforgot.com →</span>
+        </div>
+        <div class="card-visual card-gradient-4">
+          <div class="card-visual-inner">
+            <span class="card-icon">📞</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. POLITE REMINDER -->
+      <div class="platform-card reveal">
+        <div class="card-content">
+          <div class="card-number">05</div>
+          <h3 class="card-title">Polite Reminder</h3>
+          <p class="card-desc">White-label no-show prevention for businesses. Hotels, clinics, restaurants, and service providers get a branded dashboard to schedule automated voice calls and SMS reminders — reducing no-shows from 18% to under 5%.</p>
+          <div class="card-tags">
+            <span class="card-tag">B2B</span>
+            <span class="card-tag">White Label</span>
+            <span class="card-tag">No-Show Prevention</span>
+          </div>
+          <span class="card-link link-5">politereminder.com →</span>
+        </div>
+        <div class="card-visual card-gradient-5">
+          <div class="card-visual-inner">
+            <span class="card-icon">🔔</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AND MORE -->
+<section class="more-section" id="more">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">// What Else</div>
+      <h2 class="section-title">And many more brewing.</h2>
+      <p class="section-desc">We're always building. Here's a taste of what's coming next from the UPD8 Group pipeline.</p>
+    </div>
+    <div class="more-grid reveal">
+      <div class="more-item">
+        <div class="more-icon">🌐</div>
+        <h4 class="more-title">Web Design Services</h4>
+        <p class="more-desc">Fast, modern websites for small businesses. $60/month, no headaches, always maintained.</p>
+      </div>
+      <div class="more-item">
+        <div class="more-icon">🎵</div>
+        <h4 class="more-title">Vienna Park</h4>
+        <p class="more-desc">AI-powered music — transforming 40+ years of personal poetry into original tracks on Spotify.</p>
+      </div>
+      <div class="more-item">
+        <div class="more-icon">🚀</div>
+        <h4 class="more-title">Coming Soon</h4>
+        <p class="more-desc">New AI-powered platforms in development. We don't stop building. Stay tuned.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="section-label">// About Us</div>
+        <h2>Built in Australia.<br>Built to ship.</h2>
+        <p>UPD8 Group is an Australian technology company that builds AI-powered platforms solving everyday problems. We believe the best software is built by people who've felt the pain point themselves.</p>
+        <p>Every platform in our portfolio started as a real frustration — buying a dodgy car, drowning in APS job ads, forgetting an appointment, or having too many ideas and not enough hours. We build the tools we wish existed.</p>
+      </div>
+      <div class="about-values reveal">
+        <div class="value-card">
+          <h4>Ship Fast</h4>
+          <p>An imperfect product in people's hands beats a perfect one in our heads.</p>
+        </div>
+        <div class="value-card">
+          <h4>Solve Real Problems</h4>
+          <p>We don't build tech for tech's sake. If it doesn't save time or money, we don't build it.</p>
+        </div>
+        <div class="value-card">
+          <h4>Australia First</h4>
+          <p>Built for the Australian market, priced in AUD, optimised for local needs.</p>
+        </div>
+        <div class="value-card">
+          <h4>AI With Purpose</h4>
+          <p>AI is the engine, not the product. The product is the problem solved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>Got an idea?<br>Let's talk.</h2>
+      <p>Whether you want to use one of our platforms, partner with us, or just say g'day — we'd love to hear from you.</p>
+      <a href="mailto:jay@upd8.group" class="btn-primary">jay@upd8.group →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <div class="logo-text">UPD<span>8</span></div>
+        </a>
+        <p>Australian technology company building AI-powered platforms that save time, save money, and keep people on track.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platforms</h4>
+        <ul>
+          <li><a href="https://listinglens.app">Listing Lens</a></li>
+          <li><a href="https://apsjobs.app">APSJobs.app</a></li>
+          <li><a href="https://notyetdude.com">Not Yet, Dude!</a></li>
+          <li><a href="https://ohcrapiforgot.com">Oh Crap, I Forgot!</a></li>
+          <li><a href="https://politereminder.com">Polite Reminder</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="mailto:jay@upd8.group">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="mailto:jay@upd8.group">jay@upd8.group</a></li>
+          <li style="color: var(--text-dim); font-size: 14px; margin-top: 16px; line-height: 1.6;">
+            1/457-459 Elizabeth Street<br>
+            Surry Hills, NSW 2010
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 UPD8 Group Pty Ltd</div>
+      <div class="footer-location">1/457-459 Elizabeth Street, Surry Hills, NSW 2010</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Nav scroll state
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Close mobile nav on link click
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>
