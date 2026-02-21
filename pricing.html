@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Pricing — UPD8</title>
+<meta name="description" content="Simple, transparent pricing across all UPD8 platforms.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060a;
+    --surface: #0e0e14;
+    --surface-2: #16161f;
+    --border: #1e1e2a;
+    --border-hover: #2a2a3a;
+    --text: #e8e8ed;
+    --text-dim: #8888a0;
+    --text-muted: #55556a;
+    --accent: #c8ff00;
+    --accent-dim: rgba(200, 255, 0, 0.08);
+    --accent-glow: rgba(200, 255, 0, 0.15);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 0;
+    background: rgba(6, 6, 10, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .back-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--text); }
+
+  /* HERO */
+  .pricing-hero {
+    padding: 160px 0 80px;
+    text-align: center;
+  }
+
+  .pricing-hero .page-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .pricing-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .pricing-hero p {
+    font-size: 17px;
+    color: var(--text-dim);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* PLATFORM SECTIONS */
+  .platform-section {
+    padding: 60px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .platform-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .platform-icon {
+    font-size: 32px;
+  }
+
+  .platform-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .platform-desc {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .price-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+
+  .price-card.featured {
+    border-color: var(--accent);
+    position: relative;
+  }
+
+  .price-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: -11px;
+    left: 24px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .price-tier {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .price-amount {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+
+  .price-amount .currency {
+    font-size: 20px;
+    color: var(--text-dim);
+    vertical-align: top;
+    position: relative;
+    top: 6px;
+  }
+
+  .price-period {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .price-features {
+    list-style: none;
+    margin-bottom: 28px;
+    flex-grow: 1;
+  }
+
+  .price-features li {
+    font-size: 14px;
+    color: var(--text-dim);
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .price-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .price-btn {
+    display: block;
+    text-align: center;
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .price-btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .price-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+
+  .price-btn.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .price-btn.secondary:hover {
+    border-color: var(--border-hover);
+    background: var(--surface-2);
+  }
+
+  .price-btn.free {
+    background: var(--surface-2);
+    color: var(--text-dim);
+  }
+
+  .price-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* FREE SECTION */
+  .free-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .free-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .free-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.3s;
+  }
+
+  .free-card:hover { border-color: var(--border-hover); }
+
+  .free-card-icon { font-size: 28px; }
+
+  .free-card-name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .free-card-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .free-badge {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(200, 255, 0, 0.15);
+    padding: 4px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* FAQ */
+  .faq-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+
+  .faq-q {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .faq-a {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-copy {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .pricing-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .free-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .faq-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-inner {
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-container">
+    <a href="/" class="logo">
+      <div class="logo-text">UPD<span>8</span></div>
+    </a>
+    <a href="/" class="back-link">← Back to home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="pricing-hero">
+  <div class="container">
+    <div class="page-label">// Pricing</div>
+    <h1>Simple pricing.<br>No surprises.</h1>
+    <p>All prices in AUD. All payments processed securely through Stripe. Cancel anytime.</p>
+  </div>
+</section>
+
+<!-- LISTING LENS -->
+<section class="platform-section">
+  <div class="container">
+    <div class="platform-header">
+      <div class="platform-icon">🔍</div>
+      <h2 class="platform-name">Listing Lens</h2>
+    </div>
+    <p class="platform-desc">AI-powered listing analysis for Australian property, vehicles, and marine. Screenshot any listing from Domain, Carsales, Facebook Marketplace, or Boat Sales and get instant red flags, pricing insights, and negotiation scripts.</p>
+    <div class="pricing-cards">
+      <div class="price-card featured">
+        <div class="price-tier">Pay Per Use</div>
+        <div class="price-amount"><span class="currency">$</span>5</div>
+        <div class="price-period">per analysis</div>
+        <ul class="price-features">
+          <li>Full AI analysis</li>
+          <li>Property, vehicles, and marine</li>
+          <li>Red flag detection</li>
+          <li>Compliance checks</li>
+          <li>Comparable pricing</li>
+          <li>Hidden cost calculator</li>
+          <li>Negotiation script</li>
+        </ul>
+        <!-- Replace # with your Stripe payment link -->
+        <a href="#" class="price-btn primary">Analyse a Listing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APSJOBS -->
+<section class="platform-section">
+  <div class="container">
+    <div class="platform-header">
+      <div class="platform-icon">💼</div>
+      <h2 class="platform-name">APSJobs.app</h2>
+    </div>
+    <p class="platform-desc">Tinder-style job discovery for 170,000+ Australian Public Service employees. Swipe, match, and apply smarter.</p>
+    <div class="pricing-cards">
+      <div class="price-card">
+        <div class="price-tier">Free</div>
+        <div class="price-amount"><span class="currency">$</span>0</div>
+        <div class="price-period">forever</div>
+        <ul class="price-features">
+          <li>Swipe-based job discovery</li>
+          <li>Salary + super calculator</li>
+          <li>Basic job matching</li>
+          <li>Save favourite roles</li>
+        </ul>
+        <a href="https://apsjobs.app" class="price-btn free">Get Started Free</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-tier">Premium</div>
+        <div class="price-amount"><span class="currency">$</span>15</div>
+        <div class="price-period">per month</div>
+        <ul class="price-features">
+          <li>Everything in Free</li>
+          <li>Selection criteria generator</li>
+          <li>Enterprise agreement comparisons</li>
+          <li>Career move financial modeller</li>
+          <li>Agency hiring insights</li>
+        </ul>
+        <a href="#" class="price-btn primary">Go Premium</a>
+        <p class="price-note">Less than 50¢/day — cancel anytime</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OH CRAP -->
+<section class="platform-section">
+  <div class="container">
+    <div class="platform-header">
+      <div class="platform-icon">📞</div>
+      <h2 class="platform-name">Oh Crap, I Forgot!</h2>
+    </div>
+    <p class="platform-desc">Voice call reminders that cut through notification blindness. Add "!" to any Google Calendar event and never miss an appointment again.</p>
+    <div class="pricing-cards">
+      <div class="price-card featured">
+        <div class="price-tier">Monthly</div>
+        <div class="price-amount"><span class="currency">$</span>9<span style="font-size: 24px;">.95</span></div>
+        <div class="price-period">per month</div>
+        <ul class="price-features">
+          <li>20 voice call reminders</li>
+          <li>SMS backup on every reminder</li>
+          <li>Google Calendar integration</li>
+          <li>"!" trigger detection</li>
+          <li>Australian voice AI</li>
+          <li>24hr + 2hr reminder sequence</li>
+        </ul>
+        <a href="#" class="price-btn primary">Subscribe Now</a>
+        <p class="price-note">Cancel anytime</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POLITE REMINDER -->
+<section class="platform-section">
+  <div class="container">
+    <div class="platform-header">
+      <div class="platform-icon">🔔</div>
+      <h2 class="platform-name">Polite Reminder</h2>
+    </div>
+    <p class="platform-desc">White-label no-show prevention for businesses. Automated voice calls and SMS reminders — branded with your logo and colours.</p>
+    <div class="pricing-cards">
+      <div class="price-card featured">
+        <div class="price-tier">Pay Per Use</div>
+        <div class="price-amount"><span class="currency">$</span>3</div>
+        <div class="price-period">per reminder</div>
+        <ul class="price-features">
+          <li>Voice call + SMS backup</li>
+          <li>White-label branded dashboard</li>
+          <li>Custom voice recordings</li>
+          <li>Press 1 to confirm / Press 2 to cancel</li>
+          <li>Real-time delivery tracking</li>
+          <li>No-show analytics</li>
+          <li>No monthly minimums</li>
+        </ul>
+        <a href="mailto:jay@upd8.group?subject=Polite Reminder enquiry" class="price-btn primary">Get in Touch</a>
+        <p class="price-note">Volume discounts available</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WEB DESIGN -->
+<section class="platform-section">
+  <div class="container">
+    <div class="platform-header">
+      <div class="platform-icon">🌐</div>
+      <h2 class="platform-name">Website Services</h2>
+    </div>
+    <p class="platform-desc">A fully managed, custom-built website for your small business. We handle everything — design, hosting, updates, and support. All for less than $2 a day.</p>
+    <div class="pricing-cards">
+      <div class="price-card featured">
+        <div class="price-tier">All-In-One</div>
+        <div class="price-amount"><span class="currency">$</span>60</div>
+        <div class="price-period">per month</div>
+        <ul class="price-features">
+          <li>Custom designed website</li>
+          <li>Hosting included</li>
+          <li>Free updates and changes</li>
+          <li>Mobile responsive</li>
+          <li>Fast loading speeds</li>
+          <li>SSL secure (HTTPS)</li>
+          <li>Ongoing support</li>
+          <li>No lock-in contract</li>
+          <li>No upfront costs</li>
+        </ul>
+        <a href="mailto:jay@upd8.group?subject=Website enquiry" class="price-btn primary">Get Started</a>
+        <p class="price-note">Less than $2/day — cancel anytime</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FREE PLATFORMS -->
+<section class="free-section">
+  <div class="container">
+    <div class="page-label" style="font-family: var(--font-mono); font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;">// Always Free</div>
+    <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">Some things are better free.</h2>
+    <div class="free-grid">
+      <a href="https://notyetdude.com" target="_blank" rel="noopener" class="free-card" style="text-decoration: none; color: inherit;">
+        <div class="free-card-icon">💡</div>
+        <div>
+          <div class="free-card-name">Not Yet, Dude!</div>
+          <div class="free-card-desc">ADHD-friendly idea parking lot</div>
+        </div>
+        <div class="free-badge">FREE</div>
+      </a>
+      <a href="https://blox.show" target="_blank" rel="noopener" class="free-card" style="text-decoration: none; color: inherit;">
+        <div class="free-card-icon">🏠</div>
+        <div>
+          <div class="free-card-name">blox.show</div>
+          <div class="free-card-desc">Safe Roblox build showcase for kids</div>
+        </div>
+        <div class="free-badge">FREE</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <div class="page-label" style="font-family: var(--font-mono); font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;">// FAQ</div>
+    <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">Common questions</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">How are payments processed?</div>
+        <div class="faq-a">All payments are processed securely through Stripe. We never see or store your card details. All prices are in Australian Dollars (AUD).</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I cancel my subscription?</div>
+        <div class="faq-a">Yes, you can cancel any subscription at any time. Your access continues until the end of your current billing period.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do credit packs expire?</div>
+        <div class="faq-a">No. Listing Lens credit packs never expire. Use them whenever you need them.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is there a refund policy?</div>
+        <div class="faq-a">Refunds are handled on a case-by-case basis. Contact us at jay@upd8.group and we'll sort it out.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need separate accounts for each platform?</div>
+        <div class="faq-a">Each platform has its own account system for now. We're working on a unified UPD8 login in the future.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">I'm a business interested in Polite Reminder. How do I start?</div>
+        <div class="faq-a">Drop us an email at jay@upd8.group. We'll set up your branded dashboard and have you running within 24 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-copy">© 2026 UPD8 Group Pty Ltd</div>
+      <div class="footer-links">
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="mailto:jay@upd8.group">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
