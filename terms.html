@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Terms of Service — UPD8</title>
+<meta name="description" content="UPD8 Group Terms of Service. Terms and conditions for using our platforms and services.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060a;
+    --surface: #0e0e14;
+    --border: #1e1e2a;
+    --border-hover: #2a2a3a;
+    --text: #e8e8ed;
+    --text-dim: #8888a0;
+    --text-muted: #55556a;
+    --accent: #c8ff00;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 0;
+    background: rgba(6, 6, 10, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .back-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--text); }
+
+  .content {
+    padding: 160px 0 100px;
+  }
+
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .last-updated {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  ul {
+    list-style: none;
+    margin-bottom: 16px;
+    padding-left: 0;
+  }
+
+  ul li {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  a { color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .footer-copy {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-container">
+    <a href="/" class="logo">
+      <div class="logo-text">UPD<span>8</span></div>
+    </a>
+    <a href="/" class="back-link">← Back to home</a>
+  </div>
+</nav>
+
+<main class="content">
+  <div class="container">
+    <div class="page-label">// Legal</div>
+    <h1>Terms of Service</h1>
+    <p class="last-updated">Last updated: 22 February 2026</p>
+
+    <p>These Terms of Service ("Terms") govern your access to and use of the websites, platforms, and services operated by UPD8 Group Pty Ltd ("UPD8", "we", "us", "our"), including but not limited to Listing Lens, APSJobs.app, Not Yet Dude, Oh Crap I Forgot, Polite Reminder, blox.show, and any other products under the UPD8 Group.</p>
+
+    <p>By accessing or using any of our services, you agree to be bound by these Terms. If you do not agree, please do not use our services.</p>
+
+    <h2>1. Eligibility</h2>
+    <p>You must be at least 16 years of age to use our services, except for blox.show which permits use by children with verified parental consent and a linked parent account. By using our services, you represent that you meet this eligibility requirement.</p>
+
+    <h2>2. Accounts</h2>
+    <p>When you create an account with us, you must provide accurate, complete, and current information. You are responsible for:</p>
+    <ul>
+      <li>Maintaining the confidentiality of your account credentials</li>
+      <li>All activities that occur under your account</li>
+      <li>Notifying us immediately of any unauthorised use of your account</li>
+    </ul>
+    <p>We reserve the right to suspend or terminate accounts that violate these Terms.</p>
+
+    <h2>3. Services</h2>
+    <p>UPD8 operates multiple platforms, each with specific functionality:</p>
+    <ul>
+      <li>Listing Lens: AI-powered analysis of vehicle marketplace listings</li>
+      <li>APSJobs.app: AI-powered job discovery for the Australian Public Service</li>
+      <li>Not Yet, Dude!: Idea parking and reminder service</li>
+      <li>Oh Crap, I Forgot!: Voice call and SMS reminder service integrated with Google Calendar</li>
+      <li>Polite Reminder: White-label no-show prevention service for businesses</li>
+      <li>blox.show: Safe platform for children to share Roblox Bloxburg builds</li>
+    </ul>
+    <p>We reserve the right to modify, suspend, or discontinue any service at any time, with or without notice.</p>
+
+    <h2>4. Payments and Subscriptions</h2>
+    <p>Some of our services require payment. By purchasing a subscription or credit pack:</p>
+    <ul>
+      <li>You agree to pay all fees associated with your selected plan</li>
+      <li>Payments are processed securely through Stripe</li>
+      <li>Prices are in Australian Dollars (AUD) unless otherwise stated</li>
+      <li>Subscriptions renew automatically unless cancelled before the renewal date</li>
+      <li>Refunds are handled on a case-by-case basis at our discretion</li>
+    </ul>
+
+    <h2>5. Acceptable Use</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Use our services for any unlawful purpose or in violation of any applicable laws</li>
+      <li>Upload, transmit, or distribute any harmful, offensive, or infringing content</li>
+      <li>Attempt to gain unauthorised access to our systems, other users' accounts, or connected third-party services</li>
+      <li>Interfere with or disrupt the integrity or performance of our services</li>
+      <li>Use automated tools to scrape, crawl, or extract data from our platforms without permission</li>
+      <li>Reverse engineer, decompile, or disassemble any part of our services</li>
+      <li>Resell or redistribute our services without written authorisation</li>
+    </ul>
+
+    <h2>6. Intellectual Property</h2>
+    <p>All content, features, and functionality of our services — including software, text, graphics, logos, and design — are owned by UPD8 Group Pty Ltd and are protected by Australian and international intellectual property laws.</p>
+    <p>You retain ownership of any content you upload to our platforms. By uploading content, you grant us a non-exclusive, worldwide, royalty-free licence to use, display, and process that content solely for the purpose of providing our services to you.</p>
+
+    <h2>7. AI-Generated Content</h2>
+    <p>Several of our platforms use artificial intelligence to generate analysis, recommendations, and content. You acknowledge that:</p>
+    <ul>
+      <li>AI-generated content is provided for informational purposes only</li>
+      <li>AI analysis should not be relied upon as professional advice (legal, financial, mechanical, or otherwise)</li>
+      <li>We do not guarantee the accuracy, completeness, or reliability of AI-generated outputs</li>
+      <li>You are responsible for verifying any information before acting upon it</li>
+    </ul>
+
+    <h2>8. Third-Party Services</h2>
+    <p>Our platforms integrate with third-party services including Google Calendar, Stripe, Twilio, and Roblox. Your use of these third-party services is subject to their respective terms and privacy policies. We are not responsible for the actions or practices of third-party service providers.</p>
+
+    <h2>9. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by Australian law:</p>
+    <ul>
+      <li>Our services are provided "as is" and "as available" without warranties of any kind</li>
+      <li>We do not warrant that our services will be uninterrupted, error-free, or secure</li>
+      <li>We are not liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our services</li>
+      <li>Our total liability to you for any claim arising from these Terms or our services shall not exceed the amount you have paid to us in the 12 months preceding the claim</li>
+    </ul>
+    <p>Nothing in these Terms excludes or limits liability that cannot be excluded or limited under Australian Consumer Law.</p>
+
+    <h2>10. Indemnification</h2>
+    <p>You agree to indemnify and hold harmless UPD8 Group Pty Ltd, its officers, directors, and employees from any claims, damages, losses, or expenses (including legal fees) arising from your use of our services or violation of these Terms.</p>
+
+    <h2>11. Termination</h2>
+    <p>We may terminate or suspend your access to our services immediately, without prior notice, if you breach these Terms. Upon termination, your right to use our services ceases immediately. Provisions that by their nature should survive termination will survive, including intellectual property, limitation of liability, and indemnification.</p>
+
+    <h2>12. Governing Law</h2>
+    <p>These Terms are governed by and construed in accordance with the laws of New South Wales, Australia. Any disputes arising from these Terms or our services shall be subject to the exclusive jurisdiction of the courts of New South Wales.</p>
+
+    <h2>13. Changes to These Terms</h2>
+    <p>We may update these Terms from time to time. We will notify you of any material changes by posting the updated Terms on this page with a revised "Last updated" date. Your continued use of our services after changes are posted constitutes acceptance of the revised Terms.</p>
+
+    <h2>14. Severability</h2>
+    <p>If any provision of these Terms is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary, and the remaining provisions will remain in full force and effect.</p>
+
+    <h2>15. Contact Us</h2>
+    <p>If you have questions about these Terms, please contact us:</p>
+    <p>UPD8 Group Pty Ltd<br>
+    1/457-459 Elizabeth Street, Surry Hills, NSW 2010<br>
+    Email: <a href="mailto:jay@upd8.group">jay@upd8.group</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-copy">© 2026 UPD8 Group Pty Ltd</div>
+  </div>
+</footer>
+
+</body>
+</html>
