@@ -124,7 +124,12 @@ export const handler = async (event) => {
       return corsResponse(400, { error: "session_id and blob_id are required" });
     }
 
-    const store = getDeployStore("upd8-sessions");
+    const store = getDeployStore({
+      name: "upd8-sessions",
+      siteID: process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_TOKEN,
+    });
+
     const imgRaw = await store.get(`img/${blob_id}`);
     if (!imgRaw) {
       return corsResponse(404, { error: "Session expired or not found" });
@@ -163,4 +168,57 @@ ${SCHEMA_INSTRUCTION}`;
       messages: [
         {
           role: "user",
-          content:
+          content: [
+            {
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: mime_type,
+                data: image_base64,
+              },
+            },
+            {
+              type: "text",
+              text: userPrompt,
+            },
+          ],
+        },
+      ],
+    });
+
+    const rawText = response.content[0].text.trim();
+    let report;
+    try {
+      const cleaned = rawText.replace(/^```json?\n?/i, "").replace(/\n?```$/i, "").trim();
+      report = JSON.parse(cleaned);
+    } catch (parseErr) {
+      console.error("JSON parse failed:", rawText.substring(0, 500));
+      return corsResponse(500, { error: "Analysis returned invalid format. Please try again." });
+    }
+
+    await store.set(`session/${session_id}`, JSON.stringify({
+      ...session,
+      status: "complete",
+      completed_at: new Date().toISOString(),
+    }));
+
+    return corsResponse(200, { report });
+
+  } catch (err) {
+    console.error("analyze.js error:", err.message);
+    return corsResponse(500, { error: err.message });
+  }
+};
+
+function corsResponse(statusCode, body) {
+  return {
+    statusCode,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, x-upd8-key",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+    },
+    body: JSON.stringify(body),
+  };
+}
