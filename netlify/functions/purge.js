@@ -1,9 +1,9 @@
-import { getDeployStore } from "@netlify/blobs";
+import { getStore } from "@netlify/blobs";
 
 const TTL_MS = 15 * 60 * 1000;
 
 export const handler = async () => {
-  const store = getDeployStore({
+  const store = getStore({
     name: "upd8-sessions",
     siteID: process.env.NETLIFY_SITE_ID,
     token: process.env.NETLIFY_TOKEN,
@@ -62,11 +62,3 @@ export const handler = async () => {
     };
   }
 };
-```
-
----
-
-Don't forget to also add these two env vars in Netlify before you redeploy:
-```
-NETLIFY_SITE_ID = your site ID from Site configuration → General
-NETLIFY_TOKEN   = your personal access token from User settings → Applications
