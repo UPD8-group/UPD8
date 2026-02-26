@@ -160,10 +160,10 @@ async function runTest() {
   setProgress(35);
 
   // ── Step 2: Fire background function (browser → background fn directly) ──
-  log('Step 2/3 — Firing analyze-background (returns 202 immediately)...', 'info');
+  log('Step 2/3 — Firing analyze-' + product + ' (returns 202 immediately)...', 'info');
 
   try {
-    var bgRes = await fetch('/.netlify/functions/analyze-background', {
+    var bgRes = await fetch('/.netlify/functions/analyze-' + product, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
