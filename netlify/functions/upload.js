@@ -1,4 +1,4 @@
-import { getStore } from "@netlify/blobs";
+import { getDeployStore } from "@netlify/blobs";
 import { randomBytes } from "crypto";
 
 const DOMAIN_REGISTRY = {
@@ -37,12 +37,12 @@ export const handler = async (event) => {
       return corsResponse(400, { error: "Image too large. Max 10MB." });
     }
 
-    const session_id = randomBytes(16).toString("hex");
-    const blob_id    = randomBytes(16).toString("hex");
+    const session_id  = randomBytes(16).toString("hex");
+    const blob_id     = randomBytes(16).toString("hex");
     const uploaded_at = new Date().toISOString();
     const expires_at  = new Date(Date.now() + TTL_MINUTES * 60 * 1000).toISOString();
 
-    const store = getStore("upd8-sessions");
+    const store = getDeployStore("upd8-sessions");
 
     await store.set(`img/${blob_id}`, JSON.stringify({
       image_base64,
@@ -72,7 +72,7 @@ export const handler = async (event) => {
 
   } catch (err) {
     console.error("upload.js error:", err.message);
-    return corsResponse(500, { error: "Upload failed" });
+    return corsResponse(500, { error: err.message });
   }
 };
 
