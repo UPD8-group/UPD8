@@ -1,32 +1,28 @@
 [build]
-  command = ""
-  functions = "netlify/functions"
   publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[functions."upload"]
+  timeout = 30
+
+[functions."status"]
+  timeout = 10
 
 [functions."purge"]
-  schedule = "*/5 * * * *"
+  timeout = 30
 
-[functions."analyze"]
-  timeout = 60
+# analyze-background: Netlify auto-detects -background suffix
+# No timeout config needed — background functions always get 15 min on paid plans
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "no-referrer"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
-[[headers]]
-  for = "/netlify/functions/*"
-  [headers.values]
-    Cache-Control = "no-store, no-cache, must-revalidate"
-
-[[edge_functions]]
-  path = "/netlify/functions/upload"
-  function = "rate-limit"
-
-[[edge_functions]]
-  path = "/netlify/functions/analyze"
-  function = "rate-limit"
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
