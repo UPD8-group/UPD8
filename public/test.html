@@ -1,128 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>UPD8.GROUP — Engine Test</title>
-    <style>
-        body { font-family: monospace; max-width: 800px; margin: 40px auto; padding: 0 24px; background: #0f1117; color: #e2e8f0; }
-        h1 { color: #22c55e; font-size: 20px; }
-        label { display: block; margin: 20px 0 6px; color: #94a3b8; font-size: 13px; }
-        input, select { width: 100%; padding: 10px; background: #1a1d27; border: 1px solid #2d3148; color: #e2e8f0; border-radius: 6px; font-family: monospace; font-size: 13px; box-sizing: border-box; }
-        button { margin-top: 20px; padding: 12px 28px; background: #16803c; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
-        button:hover { background: #14662f; }
-        button:disabled { background: #374151; cursor: not-allowed; }
-        #status { margin-top: 20px; padding: 14px; background: #1a1d27; border-left: 3px solid #22c55e; border-radius: 4px; font-size: 13px; line-height: 1.8; display: none; white-space: pre-wrap; }
-        #status.error { border-color: #ef4444; }
-        #output { margin-top: 16px; padding: 16px; background: #0a0d14; border: 1px solid #2d3148; border-radius: 6px; font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-all; display: none; max-height: 600px; overflow-y: auto; }
-        .step { color: #22c55e; }
-        .err  { color: #ef4444; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPD8.GROUP — Engine Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+    h1 { font-size: 20px; font-weight: 700; color: #f8fafc; margin-bottom: 4px; }
+    .sub { font-size: 13px; color: #64748b; margin-bottom: 32px; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 28px; width: 100%; max-width: 520px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.05em; }
+    input[type="text"], input[type="file"], select { width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; font-size: 14px; margin-bottom: 18px; font-family: inherit; }
+    input[type="file"] { padding: 8px 12px; cursor: pointer; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    button { width: 100%; padding: 14px; background: #16803c; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+    button:hover:not(:disabled) { background: #14662f; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .log { margin-top: 24px; }
+    .log-entry { padding: 10px 14px; border-radius: 6px; margin-bottom: 8px; font-size: 13px; font-family: 'Menlo','Courier New',monospace; line-height: 1.5; }
+    .log-entry.info { background: #1e293b; border-left: 3px solid #3b82f6; color: #93c5fd; }
+    .log-entry.ok   { background: #052e16; border-left: 3px solid #16a34a; color: #86efac; }
+    .log-entry.err  { background: #1f0a0a; border-left: 3px solid #dc2626; color: #fca5a5; }
+    .log-entry.wait { background: #1c1500; border-left: 3px solid #d97706; color: #fcd34d; }
+    #reportWrap { display: none; margin-top: 24px; width: 100%; max-width: 760px; }
+    #reportWrap iframe { width: 100%; border: 1px solid #334155; border-radius: 12px; background: #fff; min-height: 600px; }
+    .report-actions { display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; }
+    .report-actions button { width: auto; padding: 10px 20px; font-size: 13px; }
+    .btn-sec { background: #334155 !important; }
+    .btn-sec:hover:not(:disabled) { background: #475569 !important; }
+    .progress-bar { height: 3px; background: #0f172a; border-radius: 2px; margin-top: 12px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #16a34a; border-radius: 2px; width: 0%; transition: width 0.5s ease; }
+  </style>
 </head>
 <body>
 
 <h1>UPD8.GROUP — Engine Test</h1>
-<p style="color:#64748b;font-size:13px;">Drop in your API key and a screenshot. Tests the full upload to analyze pipeline.</p>
+<p class="sub">Background function + polling architecture. Tests the full upload → analyze pipeline.</p>
 
-<label>LISTINGLENS_API_KEY (from Bitwarden)</label>
-<input type="password" id="apiKey" placeholder="ll_a3f8c2d1..." />
+<div class="card">
+  <label>API KEY (from Bitwarden)</label>
+  <input type="text" id="apiKey" placeholder="ll_... or vv_... or mm_...">
 
-<label>Tier</label>
-<select id="tier">
-    <option value="standard">Standard</option>
-    <option value="deep_dive">Deep Dive</option>
-</select>
+  <div class="row">
+    <div>
+      <label>PRODUCT</label>
+      <select id="product">
+        <option value="listinglens">Listing Lens</option>
+        <option value="vehiclevibe">Vehicle Vibe</option>
+        <option value="menumelt">Menu Melt</option>
+      </select>
+    </div>
+    <div>
+      <label>TIER</label>
+      <select id="tier">
+        <option value="standard">Standard</option>
+        <option value="deep-dive">Deep Dive</option>
+      </select>
+    </div>
+  </div>
 
-<label>Screenshot (JPG or PNG)</label>
-<input type="file" id="screenshot" accept="image/jpeg,image/png,image/webp" />
+  <label>SCREENSHOT (JPG or PNG)</label>
+  <input type="file" id="screenshot" accept="image/jpeg,image/png,image/webp">
 
-<button id="btn" onclick="runTest()">Run Test</button>
+  <button id="runBtn" onclick="runTest()">Run Test</button>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="log" id="log"></div>
+</div>
 
-<div id="status"></div>
-<div id="output"></div>
+<div id="reportWrap">
+  <div class="report-actions">
+    <button onclick="downloadReport()">↓ Download Report</button>
+    <button class="btn-sec" onclick="resetTest()">← New Test</button>
+  </div>
+  <iframe id="reportFrame" sandbox="allow-same-origin"></iframe>
+</div>
 
 <script>
+var currentHtml = '';
+var pollTimer   = null;
+
+function log(msg, type) {
+  var el = document.createElement('div');
+  el.className = 'log-entry ' + (type || 'info');
+  el.textContent = msg;
+  document.getElementById('log').appendChild(el);
+}
+function setProgress(pct) { document.getElementById('progressFill').style.width = pct + '%'; }
+function clearLog() { document.getElementById('log').innerHTML = ''; setProgress(0); }
+
 async function runTest() {
-    const apiKey    = document.getElementById('apiKey').value.trim();
-    const tier      = document.getElementById('tier').value;
-    const fileInput = document.getElementById('screenshot');
-    const btn       = document.getElementById('btn');
-    const status    = document.getElementById('status');
-    const output    = document.getElementById('output');
+  var apiKey = document.getElementById('apiKey').value.trim();
+  var product = document.getElementById('product').value;
+  var tier = document.getElementById('tier').value;
+  var fileInput = document.getElementById('screenshot');
 
-    status.style.display = 'none';
-    status.className = '';
-    output.style.display = 'none';
-    output.textContent = '';
+  if (!apiKey)             { log('Paste your API key first', 'err'); return; }
+  if (!fileInput.files[0]) { log('Select a screenshot first', 'err'); return; }
 
-    if (!apiKey)            return showStatus('Please paste your LISTINGLENS_API_KEY.', true);
-    if (!fileInput.files[0]) return showStatus('Please select a screenshot.', true);
+  clearLog();
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('reportWrap').style.display = 'none';
 
-    btn.disabled = true;
+  // Step 1: Upload
+  log('Step 1/3 — Uploading screenshot...', 'info');
+  setProgress(10);
 
-    try {
-        showStatus('Step 1/3 — Converting screenshot...');
-        const file   = fileInput.files[0];
-        const base64 = await toBase64(file);
+  var formData = new FormData();
+  formData.append('screenshot', fileInput.files[0]);
+  formData.append('product', product);
+  formData.append('api_key', apiKey);
 
-        showStatus('Step 1/3 done\nStep 2/3 — Uploading to upd8.group...');
+  var uploadRes, uploadData;
+  try {
+    uploadRes  = await fetch('/api/upload', { method: 'POST', body: formData });
+    uploadData = await uploadRes.json();
+  } catch (e) {
+    log('Upload network error: ' + e.message, 'err');
+    document.getElementById('runBtn').disabled = false;
+    return;
+  }
 
-        const uploadRes = await fetch('https://upd8.group/.netlify/functions/upload', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-upd8-key': apiKey,
-            },
-            body: JSON.stringify({
-                image_base64: base64,
-                mime_type: file.type,
-            }),
-        });
+  if (!uploadRes.ok) {
+    log('Upload failed (' + uploadRes.status + '): ' + (uploadData.error || 'Unknown'), 'err');
+    document.getElementById('runBtn').disabled = false;
+    return;
+  }
 
-        const uploadData = await uploadRes.json();
-        if (!uploadRes.ok) throw new Error('Upload failed: ' + uploadData.error);
+  var sessionId = uploadData.session_id;
+  var blobId    = uploadData.blob_id;
+  var jobId     = 'job_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
 
-        const { session_id, blob_id, expires_at } = uploadData;
-        showStatus('Step 2/3 done\n  session_id: ' + session_id + '\n  blob_id:    ' + blob_id + '\n  expires:    ' + expires_at + '\n\nStep 3/3 — Analysing with Claude (15-30 seconds)...');
+  log('✓ Uploaded', 'ok');
+  log('  session_id: ' + sessionId, 'ok');
+  log('  blob_id:    ' + blobId, 'ok');
+  log('  expires:    ' + (uploadData.expires || '15 min'), 'ok');
+  log('  job_id:     ' + jobId, 'ok');
+  setProgress(30);
 
-        const analyzeRes = await fetch('https://upd8.group/.netlify/functions/analyze', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-upd8-key': apiKey,
-            },
-            body: JSON.stringify({ session_id, blob_id, tier }),
-        });
+  // Step 2: Fire background function
+  log('Step 2/3 — Firing analyze-background (returns 202 immediately)...', 'info');
 
-        const analyzeData = await analyzeRes.json();
-        if (!analyzeRes.ok) throw new Error('Analysis failed: ' + analyzeData.error);
-
-        showStatus('All steps complete — report received below');
-        output.style.display = 'block';
-        output.textContent = JSON.stringify(analyzeData.report, null, 2);
-
-    } catch (err) {
-        showStatus('Error: ' + err.message, true);
-    } finally {
-        btn.disabled = false;
-    }
-}
-
-function toBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload  = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+  try {
+    var bgRes = await fetch('/.netlify/functions/analyze-background', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        job_id: jobId, session_id: sessionId, blob_id: blobId,
+        product: product, tier: tier, api_key: apiKey
+      })
     });
+    log('✓ Background function fired (HTTP ' + bgRes.status + ')', 'ok');
+  } catch (e) {
+    log('✓ Background function fired (connection closed — normal for 202)', 'ok');
+  }
+
+  setProgress(45);
+
+  // Step 3: Poll
+  log('Step 3/3 — Polling /api/status every 3s (max 3 min)...', 'wait');
+
+  var attempts = 0;
+  var maxAttempts = 60;
+  var pollStart = Date.now();
+
+  pollTimer = setInterval(async function() {
+    attempts++;
+    var elapsed = Math.round((Date.now() - pollStart) / 1000);
+    try {
+      var statusRes  = await fetch('/api/status?job_id=' + encodeURIComponent(jobId));
+      var statusData = await statusRes.json();
+
+      if (statusData.status === 'complete') {
+        clearInterval(pollTimer);
+        setProgress(100);
+        log('✓ Report ready! (' + elapsed + 's, ' + (statusData.html ? statusData.html.length : 0) + ' chars)', 'ok');
+        currentHtml = statusData.html || '';
+        var frame = document.getElementById('reportFrame');
+        frame.srcdoc = currentHtml;
+        frame.onload = function() {
+          try {
+            var h = Math.max(frame.contentDocument.body.scrollHeight, frame.contentDocument.documentElement.scrollHeight);
+            frame.style.height = (h > 200 ? h + 48 : 5000) + 'px';
+          } catch(e) { frame.style.height = '5000px'; }
+        };
+        document.getElementById('reportWrap').style.display = 'block';
+        document.getElementById('runBtn').disabled = false;
+        window.scrollTo({ top: document.getElementById('reportWrap').offsetTop - 20, behavior: 'smooth' });
+        return;
+      }
+
+      if (statusData.status === 'error') {
+        clearInterval(pollTimer);
+        log('✗ Error: ' + (statusData.error || 'Unknown'), 'err');
+        document.getElementById('runBtn').disabled = false;
+        return;
+      }
+
+      setProgress(Math.min(90, 45 + Math.floor((attempts / maxAttempts) * 45)));
+      log('⏳ Processing... (' + elapsed + 's)', 'wait');
+
+    } catch (e) {
+      log('Poll error: ' + e.message, 'err');
+    }
+
+    if (attempts >= maxAttempts) {
+      clearInterval(pollTimer);
+      log('✗ Timed out after 3 minutes', 'err');
+      document.getElementById('runBtn').disabled = false;
+    }
+  }, 3000);
 }
 
-function showStatus(text, isError) {
-    const status = document.getElementById('status');
-    status.style.display = 'block';
-    status.className = isError ? 'error' : '';
-    status.textContent = text;
+function downloadReport() {
+  if (!currentHtml) return;
+  var blob = new Blob([currentHtml], { type: 'text/html' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'upd8-report.html'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetTest() {
+  if (pollTimer) clearInterval(pollTimer);
+  clearLog(); currentHtml = '';
+  document.getElementById('reportWrap').style.display = 'none';
+  document.getElementById('reportFrame').srcdoc = '';
+  document.getElementById('screenshot').value = '';
+  document.getElementById('runBtn').disabled = false;
+  setProgress(0);
 }
 </script>
-
 </body>
 </html>
