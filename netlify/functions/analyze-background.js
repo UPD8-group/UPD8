@@ -1,22 +1,16 @@
 /**
- * UPD8.GROUP — Analyze (Background Function)
+ * UPD8.GROUP — Analyze Background Function
  *
- * Called directly by the BROWSER (not by another function).
- * Returns 202 immediately. Netlify keeps it running up to 15 min.
- * Stores result in Blobs. Browser polls /api/status for completion.
+ * Called directly by the BROWSER. Returns 202 immediately.
+ * Netlify keeps it running up to 15 min.
+ * Browser polls /api/status for completion.
  *
  * Route: POST /.netlify/functions/analyze-background
- * Body:  { session_id, blob_id, product, tier, job_id }
+ * Body:  { api_key, job_id, session_id, blob_id, product, tier }
  */
 
-const Anthropic    = require('@anthropic-ai/sdk');
-const { getStore } = require('@netlify/blobs');
-
-const PRODUCT_KEYS = {
-  listinglens: process.env.LISTINGLENS_API_KEY,
-  vehiclevibe: process.env.VEHICLEVIBE_API_KEY,
-  menumelt:    process.env.MENUMELT_API_KEY,
-};
+const Anthropic    = require("@anthropic-ai/sdk");
+const { getStore } = require("@netlify/blobs");
 
 const SYSTEM_PROMPT = `You are an expert marketplace listing analyst for the UPD8.GROUP buyer intelligence platform.
 
@@ -70,9 +64,23 @@ Mobile responsive.
 
 Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown. No code fences. No preamble.`;
 
+// ⚠️ Validate at CALL TIME — not at module init (env vars resolve to
+// "undefined" at cold-start when used as object keys, causing 401 on every call)
+function isValidKey(apiKey, product) {
+  if (!apiKey) return false;
+  const keys = {
+    listinglens: process.env.LISTINGLENS_API_KEY,
+    vehiclevibe: process.env.VEHICLEVIBE_API_KEY,
+    menumelt:    process.env.MENUMELT_API_KEY,
+    travelling:  process.env.TRAVELLING_API_KEY,
+  };
+  const expected = keys[(product || "").toLowerCase()];
+  return !!(expected && apiKey === expected);
+}
+
 function blobStore() {
   return getStore({
-    name: 'upd8-sessions',
+    name:   "upd8-sessions",
     siteID: process.env.NETLIFY_SITE_ID,
     token:  process.env.NETLIFY_TOKEN,
   });
@@ -80,105 +88,113 @@ function blobStore() {
 
 exports.handler = async (event) => {
   const store = blobStore();
-  let jobId = null;
+  let jobId   = null;
 
   try {
-    const body     = JSON.parse(event.body || '{}');
-    jobId          = body.job_id;
+    const body      = JSON.parse(event.body || "{}");
+    jobId           = body.job_id;
     const sessionId = body.session_id;
     const blobId    = body.blob_id;
-    const product   = (body.product || 'listinglens').toLowerCase();
+    const product   = (body.product || "listinglens").toLowerCase();
+    const tier      = (body.tier    || "standard").toLowerCase();
     const apiKey    = body.api_key;
 
     if (!jobId || !sessionId || !blobId) {
-      console.error('Missing required fields');
+      console.error("analyze-background: missing required fields");
       return { statusCode: 202 };
     }
 
-    // Validate API key
-    const expectedKey = PRODUCT_KEYS[product];
-    if (!expectedKey || apiKey !== expectedKey) {
-      console.error('Invalid API key for product:', product);
-      await store.setJSON('job/' + jobId, { status: 'error', error: 'Invalid API key' });
+    if (!isValidKey(apiKey, product)) {
+      console.error("analyze-background: invalid API key for product:", product);
+      await store.set("job/" + jobId, JSON.stringify({ status: "error", error: "Invalid API key" }));
       return { statusCode: 202 };
     }
 
-    console.log('Job', jobId, ': starting');
-    await store.setJSON('job/' + jobId, { status: 'processing', startedAt: new Date().toISOString() });
+    console.log("Job", jobId, ": starting");
+    await store.set("job/" + jobId, JSON.stringify({ status: "processing", startedAt: new Date().toISOString() }));
 
-    // Retrieve image from Blobs
-    let imageBuffer, imageMimeType;
+    // Retrieve image JSON stored by upload.js
+    const imgRaw = await store.get("img/" + blobId);
+    if (!imgRaw) {
+      console.error("Job", jobId, ": image blob not found");
+      await store.set("job/" + jobId, JSON.stringify({ status: "error", error: "Image expired or not found. Please re-upload." }));
+      return { statusCode: 202 };
+    }
+
+    let imgData;
     try {
-      const imgBlob = await store.get('img/' + blobId, { type: 'arrayBuffer' });
-      const imgMeta = await store.getMetadata('img/' + blobId);
-      imageBuffer   = Buffer.from(imgBlob);
-      imageMimeType = (imgMeta && imgMeta.metadata && imgMeta.metadata.mimeType) || 'image/jpeg';
-    } catch (e) {
-      console.error('Job', jobId, ': image retrieval failed:', e.message);
-      await store.setJSON('job/' + jobId, { status: 'error', error: 'Image expired or not found. Please re-upload.' });
+      imgData = JSON.parse(imgRaw);
+    } catch {
+      console.error("Job", jobId, ": image blob corrupt");
+      await store.set("job/" + jobId, JSON.stringify({ status: "error", error: "Image data corrupt. Please re-upload." }));
       return { statusCode: 202 };
     }
 
-    const imageBase64 = imageBuffer.toString('base64');
-    const reportId    = 'UPD8-' + Math.random().toString(36).substring(2, 7).toUpperCase();
-    const today       = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-    const systemPrompt = SYSTEM_PROMPT + '\n\nReport ID: ' + reportId + '\nDate: ' + today + '\nProduct: ' + product;
+    const { image_base64, mime_type, expires_at } = imgData;
 
-    console.log('Job', jobId, ': calling Claude');
+    if (new Date() > new Date(expires_at)) {
+      await store.set("job/" + jobId, JSON.stringify({ status: "error", error: "Session expired. Please re-upload." }));
+      try { await Promise.all([store.delete("img/" + blobId), store.delete("session/" + sessionId)]); } catch (_) {}
+      return { statusCode: 202 };
+    }
 
+    const reportId = "UPD8-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+    const today    = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
+    const tierNote = tier === "deep-dive"
+      ? "\n\nDEEP DIVE MODE: expand every section with maximum detail."
+      : "\n\nSTANDARD MODE: be thorough but concise.";
+
+    const systemPrompt = SYSTEM_PROMPT + tierNote + "\n\nReport ID: " + reportId + "\nDate: " + today + "\nProduct: " + product;
+
+    console.log("Job", jobId, ": calling Claude");
     const client   = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     const response = await client.messages.create({
-      model:      'claude-sonnet-4-6',
-      max_tokens: 6000,
+      model:      "claude-sonnet-4-6",
+      max_tokens: tier === "deep-dive" ? 8000 : 6000,
       system:     systemPrompt,
       messages: [{
-        role: 'user',
+        role: "user",
         content: [
           {
-            type: 'image',
-            source: { type: 'base64', media_type: imageMimeType, data: imageBase64 }
+            type:   "image",
+            source: { type: "base64", media_type: mime_type, data: image_base64 }
           },
           {
-            type: 'text',
-            text: 'Analyse this listing and generate the complete buyer intelligence report as standalone HTML.'
+            type: "text",
+            text: "Analyse this listing and generate the complete buyer intelligence report as standalone HTML."
           }
         ]
       }]
     });
 
     let html = response.content
-      .filter(b => b.type === 'text')
+      .filter(b => b.type === "text")
       .map(b => b.text)
-      .join('');
+      .join("");
 
-    // Strip markdown fences if Claude added them
-    html = html.replace(/```html\n?/g, '').replace(/```\n?/g, '').trim();
-    const start = html.indexOf('<!DOCTYPE html>') !== -1 ? html.indexOf('<!DOCTYPE html>') : html.indexOf('<html');
-    const end   = html.lastIndexOf('</html>');
+    // Strip accidental markdown fences
+    html = html.replace(/```html\n?/gi, "").replace(/```\n?/g, "").trim();
+    const start = html.indexOf("<!DOCTYPE html>") !== -1 ? html.indexOf("<!DOCTYPE html>") : html.indexOf("<html");
+    const end   = html.lastIndexOf("</html>");
     if (start !== -1 && end !== -1) html = html.substring(start, end + 7);
 
-    console.log('Job', jobId, ': storing report (' + html.length + ' chars)');
-    await store.setJSON('job/' + jobId, {
-      status:      'complete',
+    console.log("Job", jobId, ": storing report", html.length, "chars");
+    await store.set("job/" + jobId, JSON.stringify({
+      status:      "complete",
       reportId,
       html,
       completedAt: new Date().toISOString()
-    });
+    }));
 
-    // Cleanup image and session
-    try {
-      await Promise.all([
-        store.delete('img/' + blobId),
-        store.delete('session/' + sessionId),
-      ]);
-    } catch (_) {}
+    // Cleanup
+    try { await Promise.all([store.delete("img/" + blobId), store.delete("session/" + sessionId)]); } catch (_) {}
 
-    console.log('Job', jobId, ': complete ✓');
+    console.log("Job", jobId, ": complete ✓");
 
   } catch (err) {
-    console.error('Job', jobId || '?', 'error:', err.message);
+    console.error("Job", jobId || "?", "error:", err.message);
     try {
-      if (jobId) await store.setJSON('job/' + jobId, { status: 'error', error: err.message || 'Unknown error' });
+      if (jobId) await store.set("job/" + jobId, JSON.stringify({ status: "error", error: err.message || "Unknown error" }));
     } catch (_) {}
   }
 
