@@ -1,5 +1,5 @@
 [build]
-  publish = "public"
+  publish   = "public"
   functions = "netlify/functions"
 
 [functions]
@@ -12,17 +12,19 @@
   timeout = 10
 
 [functions."purge"]
-  timeout = 30
+  schedule = "*/5 * * * *"
+  timeout  = 30
 
-# analyze-background: Netlify auto-detects -background suffix
-# No timeout config needed — background functions always get 15 min on paid plans
+# Background functions: Netlify auto-detects the -background suffix.
+# No timeout config needed — always 15 min on paid plans.
+# analyze-listinglens, analyze-vehiclevibe, analyze-noforksgiven
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from   = "/api/*"
+  to     = "/.netlify/functions/:splat"
   status = 200
 
 [[redirects]]
-  from = "/*"
-  to = "/404.html"
+  from   = "/*"
+  to     = "/404.html"
   status = 404
