@@ -71,7 +71,7 @@ function isValidKey(apiKey, product) {
   const keys = {
     listinglens: process.env.LISTINGLENS_API_KEY,
     vehiclevibe: process.env.VEHICLEVIBE_API_KEY,
-    menumelt:    process.env.MENUMELT_API_KEY,
+    noforksgiven:    process.env.MENUMELT_API_KEY,
     travelling:  process.env.TRAVELLING_API_KEY,
   };
   const expected = keys[(product || "").toLowerCase()];
