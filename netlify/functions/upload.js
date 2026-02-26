@@ -20,7 +20,7 @@ function getProductForKey(apiKey) {
   if (apiKey === process.env.LISTINGLENS_API_KEY) return { domain: "listinglens.app",  category: "real_estate" };
   if (apiKey === process.env.VEHICLEVIBE_API_KEY)  return { domain: "vehiclevibe.app",  category: "vehicle"     };
   if (apiKey === process.env.TRAVELLING_API_KEY)   return { domain: "travelling.app",   category: "travel"      };
-  if (apiKey === process.env.MENUMELT_API_KEY)      return { domain: "menumelt.app",     category: "food"        };
+  if (apiKey === process.env.MENUMELT_API_KEY) return { domain: "noforksgiven.app", category: "food" };
   return null;
 }
 
