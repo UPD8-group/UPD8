@@ -1,0 +1,28 @@
+[build]
+  functions = "netlify/functions"
+  publish = "public"
+
+[functions."purge"]
+  schedule = "*/5 * * * *"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+[[headers]]
+  for = "/netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+
+[[edge_functions]]
+  path = "/netlify/functions/upload"
+  function = "rate-limit"
+
+[[edge_functions]]
+  path = "/netlify/functions/analyze"
+  function = "rate-limit"
