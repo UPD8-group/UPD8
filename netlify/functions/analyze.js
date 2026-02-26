@@ -1,4 +1,4 @@
-import { getStore } from "@netlify/blobs";
+import { getDeployStore } from "@netlify/blobs";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -124,7 +124,7 @@ export const handler = async (event) => {
       return corsResponse(400, { error: "session_id and blob_id are required" });
     }
 
-    const store = getStore("upd8-sessions");
+    const store = getDeployStore("upd8-sessions");
     const imgRaw = await store.get(`img/${blob_id}`);
     if (!imgRaw) {
       return corsResponse(404, { error: "Session expired or not found" });
@@ -133,7 +133,8 @@ export const handler = async (event) => {
     const { image_base64, mime_type, expires_at } = JSON.parse(imgRaw);
 
     if (new Date() > new Date(expires_at)) {
-      await hardDelete(store, blob_id, session_id);
+      await store.delete(`img/${blob_id}`);
+      await store.delete(`session/${session_id}`);
       return corsResponse(410, { error: "Session expired. Please upload again." });
     }
 
@@ -162,66 +163,4 @@ ${SCHEMA_INSTRUCTION}`;
       messages: [
         {
           role: "user",
-          content: [
-            {
-              type: "image",
-              source: {
-                type: "base64",
-                media_type: mime_type,
-                data: image_base64,
-              },
-            },
-            {
-              type: "text",
-              text: userPrompt,
-            },
-          ],
-        },
-      ],
-    });
-
-    const rawText = response.content[0].text.trim();
-    let report;
-    try {
-      const cleaned = rawText.replace(/^```json?\n?/i, "").replace(/\n?```$/i, "").trim();
-      report = JSON.parse(cleaned);
-    } catch (parseErr) {
-      console.error("JSON parse failed:", rawText.substring(0, 500));
-      return corsResponse(500, { error: "Analysis returned invalid format. Please try again." });
-    }
-
-    await store.set(`session/${session_id}`, JSON.stringify({
-      ...session,
-      status: "complete",
-      completed_at: new Date().toISOString(),
-    }));
-
-    return corsResponse(200, { report });
-
-  } catch (err) {
-    console.error("analyze.js error:", err.message);
-    return corsResponse(500, { error: "Analysis failed. Please try again." });
-  }
-};
-
-async function hardDelete(store, blob_id, session_id) {
-  try {
-    await store.delete(`img/${blob_id}`);
-    await store.delete(`session/${session_id}`);
-  } catch (e) {
-    console.error("Delete error:", e.message);
-  }
-}
-
-function corsResponse(statusCode, body) {
-  return {
-    statusCode,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Content-Type, x-upd8-key",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-    },
-    body: JSON.stringify(body),
-  };
-}
+          content:
