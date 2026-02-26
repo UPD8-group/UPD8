@@ -42,7 +42,11 @@ export const handler = async (event) => {
     const uploaded_at = new Date().toISOString();
     const expires_at  = new Date(Date.now() + TTL_MINUTES * 60 * 1000).toISOString();
 
-    const store = getDeployStore("upd8-sessions");
+    const store = getDeployStore({
+      name: "upd8-sessions",
+      siteID: process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_TOKEN,
+    });
 
     await store.set(`img/${blob_id}`, JSON.stringify({
       image_base64,
