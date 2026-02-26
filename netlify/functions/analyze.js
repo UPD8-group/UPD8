@@ -1,4 +1,4 @@
-import { getDeployStore } from "@netlify/blobs";
+import { getStore } from "@netlify/blobs";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -124,7 +124,7 @@ export const handler = async (event) => {
       return corsResponse(400, { error: "session_id and blob_id are required" });
     }
 
-    const store = getDeployStore({
+    const store = getStore({
       name: "upd8-sessions",
       siteID: process.env.NETLIFY_SITE_ID,
       token: process.env.NETLIFY_TOKEN,
