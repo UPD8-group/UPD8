@@ -6,6 +6,9 @@
 [functions."purge"]
   schedule = "*/5 * * * *"
 
+[functions."analyze"]
+  timeout = 60
+
 [[headers]]
   for = "/*"
   [headers.values]
