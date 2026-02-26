@@ -1,4 +1,4 @@
-import { getDeployStore } from "@netlify/blobs";
+import { getStore } from "@netlify/blobs";
 import { randomBytes } from "crypto";
 
 const DOMAIN_REGISTRY = {
@@ -42,7 +42,7 @@ export const handler = async (event) => {
     const uploaded_at = new Date().toISOString();
     const expires_at  = new Date(Date.now() + TTL_MINUTES * 60 * 1000).toISOString();
 
-    const store = getDeployStore({
+    const store = getStore({
       name: "upd8-sessions",
       siteID: process.env.NETLIFY_SITE_ID,
       token: process.env.NETLIFY_TOKEN,
